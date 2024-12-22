@@ -251,7 +251,7 @@ if __name__ == "__main__":
     config = {
         "train_dir": "/workspace/dataset/training",  
         "val_dir":   "/workspace/dataset/validation", 
-        "num_classes": 20,
+        "num_classes": 4,
         "num_nodes": 5,        
         "batch_size": 4,
         "num_epochs": 5,

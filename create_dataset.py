@@ -3,8 +3,8 @@ import fiftyone.zoo as foz
 import os
 
 classes = ["Cat", "Dog", "Person"]
-max_samples_train = 40
-max_samples_val = 10
+max_samples_train = 80
+max_samples_val = 20
 
 export_dir = "/workspace/dataset"
 

@@ -17,13 +17,7 @@ from ray.tune import register_env
 from pycocotools.cocoeval import COCOeval
 
 
-def set_seed(seed=40):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+
 
 def collate_fn(batch):
     return tuple(zip(*batch))
@@ -123,6 +117,14 @@ class ParameterServer:
 
 @ray.remote(num_gpus=1)
 def train_loop_per_worker(worker_id, config, ps_actor):
+    def set_seed(seed=40):
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        
     set_seed(40)
 
     train_dir = config["train_dir"]
@@ -251,7 +253,7 @@ if __name__ == "__main__":
     config = {
         "train_dir": "/workspace/dataset/training",  
         "val_dir":   "/workspace/dataset/validation", 
-        "num_classes": 4,
+        "num_classes": 20,
         "num_nodes": 5,        
         "batch_size": 4,
         "num_epochs": 5,

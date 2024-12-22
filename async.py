@@ -97,23 +97,22 @@ def evaluate_coco(model, data_loader, device, dataset_dir):
 
 @ray.remote
 class ParameterServer:
-
     def __init__(self, initial_weights, lr=0.005):
-        self.global_weights = {
-            k: v.cpu() for k, v in initial_weights.items()
-        }
+        # Store all initial weights on CPU
+        self.global_weights = {k: v.cpu() for k, v in initial_weights.items()}
         self.lr = lr
 
     def get_weights(self):
         return self.global_weights
 
     def apply_gradients(self, grad_dict):
-        for k in self.global_weights:
-            self.global_weights[k] = self.global_weights[k] - self.lr * grad_dict[k]
+        # Only update keys that exist in grad_dict
+        for key, grad in grad_dict.items():
+            self.global_weights[key] = self.global_weights[key] - self.lr * grad
 
     def set_lr(self, new_lr):
         self.lr = new_lr
-
+        
 
 @ray.remote(num_gpus=1)
 def train_loop_per_worker(worker_id, config, ps_actor):

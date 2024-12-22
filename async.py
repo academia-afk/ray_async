@@ -178,7 +178,7 @@ def train_loop_per_worker(worker_id, config, ps_actor):
 
     wandb.init(
         project="async_param_server_demo",
-        group="three_nodes_20cls",
+        group="three_nodes_but_5",
         name=f"worker_{worker_id}",
         config=config
     )

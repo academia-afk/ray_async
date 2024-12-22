@@ -177,8 +177,8 @@ def train_loop_per_worker(worker_id, config, ps_actor):
     )
 
     wandb.init(
-        project="async_param_server_demo",
-        group="single_node",
+        project="async_distributed",
+        group="five_nodes",
         name=f"worker_{worker_id}",
         config=config
     )
@@ -227,13 +227,13 @@ def train_loop_per_worker(worker_id, config, ps_actor):
             ap, ap50 = evaluate_coco(base_model, val_loader, device, val_dir)
             wandb.log({
                 "epoch": epoch,
-                "loss": avg_loss,
+                "train_loss": avg_loss,
                 "ap": ap,
                 "ap50": ap50,
             })
             print(f"[Worker {worker_id}] Epoch {epoch}: loss={avg_loss:.4f}, AP={ap:.4f}, AP50={ap50:.4f}")
         else:
-            wandb.log({"epoch": epoch, "train_loss": avg_loss})
+            wandb.log({"epoch": epoch, "loss": avg_loss})
 
     wandb.finish()
 
@@ -254,10 +254,10 @@ if __name__ == "__main__":
         "train_dir": "/workspace/dataset/training",  
         "val_dir":   "/workspace/dataset/validation", 
         "num_classes": 20,
-        "num_nodes": 1,        
-        "batch_size": 4,
-        "num_epochs": 5,
-        "lr": 0.001,      
+        "num_nodes": 5,        
+        "batch_size": 8,
+        "num_epochs": 10,
+        "lr": 0.005,      
     }
     initial_model = torchvision.models.detection.fasterrcnn_resnet50_fpn(weights="DEFAULT")
     in_features = initial_model.roi_heads.box_predictor.cls_score.in_features

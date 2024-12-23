@@ -160,13 +160,6 @@ def train_one_epoch(
         weight_decay=0.0005,
     )
 
-    wandb.init(
-        project="sync_distributed",
-        name=f"worker_{node_id}",
-        group="three_nodes",
-        config=config
-    )
-
     model.train()
     total_train_loss = 0.0
 
@@ -185,7 +178,6 @@ def train_one_epoch(
 
     avg_loss = total_train_loss / len(train_loader)
 
-    wandb.log({"loss": avg_loss})
     wandb.finish()
 
     final_state = model.state_dict()
@@ -235,7 +227,7 @@ if __name__ == "__main__":
     for k, v in global_state.items():
         global_state[k] = v.cpu()
 
-    wandb.init(project="sync_distributed", group="five_nodes", name="driver", config=config)
+    wandb.init(project="sync_distributed", group="three_nodes", name="node_0", config=config)
 
     for epoch in range(config["num_epochs"]):
         futures = []
@@ -259,7 +251,7 @@ if __name__ == "__main__":
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         base_model.to(device)
 
-        ap, ap50 = evaluate_coco(base_model, 
+        ap, ap50 = evaluate_coco(base_model,
                                  DataLoader(
                                      CocoDataset(
                                          os.path.join(config["val_dir"], "data"),

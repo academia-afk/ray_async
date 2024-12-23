@@ -208,7 +208,7 @@ if __name__ == "__main__":
         "train_dir":   "/workspace/dataset/training",
         "val_dir":     "/workspace/dataset/validation",
         "num_classes": 4,
-        "num_nodes":   3,
+        "num_nodes":   1,
         "batch_size":  8,
         "num_epochs":  10,
         "lr":          0.005,
@@ -227,7 +227,7 @@ if __name__ == "__main__":
     for k, v in global_state.items():
         global_state[k] = v.cpu()
 
-    wandb.init(project="sync_distributed", group="three_nodes", name="node_0", config=config)
+    wandb.init(project="sync_distributed", group="single_node_test", name="node_0", config=config)
 
     for epoch in range(config["num_epochs"]):
         futures = []

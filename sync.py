@@ -105,7 +105,6 @@ def train_one_epoch(
 ):
 
     def set_seed(seed):
-        """Ensure reproducibility across workers."""
         random.seed(seed)
         np.random.seed(seed)
         torch.manual_seed(seed)
@@ -162,9 +161,9 @@ def train_one_epoch(
     )
 
     wandb.init(
-        project="synchronous_no_ps_no_ddp",
+        project="sync_distributed",
         name=f"worker_{node_id}",
-        group="naive_sync",
+        group="three_nodes",
         config=config
     )
 
@@ -217,7 +216,7 @@ if __name__ == "__main__":
         "train_dir":   "/workspace/dataset/training",
         "val_dir":     "/workspace/dataset/validation",
         "num_classes": 20,
-        "num_nodes":   5,
+        "num_nodes":   3,
         "batch_size":  8,
         "num_epochs":  10,
         "lr":          0.005,
